@@ -1,3 +1,4 @@
+import { observable, Observable } from 'rxjs';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,39 +12,33 @@ import { ModeloMarca } from '../modelo.model';
 })
 export class PageComponent implements OnInit {
 
-  marcas: Array<any> = [];
-  modelo: Array<any> = []
   modelo2: ModeloMarca = {
-    ano: [] = [],
-    modelos: []
+    imagesUrl: [],
+    cards: []
   };
-  displayedColumns: string[] = [ 'nome','codigo'];
-  displayedColumns2: string[] = [ 'nome'];
-  dataSource = new MatTableDataSource(this.marcas);
-  dataSourceModelo = new MatTableDataSource(this.modelo2.modelos);
+  displayedColumns: string[] = [ 'nome'];
+  dataSource = new MatTableDataSource(this.modelo2.cards);
+  dataSourceModelo = new MatTableDataSource(this.modelo2.cards);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private buscarFipe: BuscarFipeService) { }
+  constructor(private buscarFipe: BuscarFipeService) {
+this.listarMarcas();
+
+  }
 
   ngOnInit(): void {
-    this.listarMarcas();
   }
 
   listarMarcas(){
-    this.buscarFipe.listarMarcas().subscribe( (dados) => {
-      this.marcas = dados;
-      this.dataSource = new MatTableDataSource(this.marcas);
-      this.dataSource.paginator = this.paginator;
-    });
+    let codigo = 5;
+   this.buscarFipe.urlAno(codigo).subscribe( (dados) =>
+   { this.modelo2 = dados;
+    this.dataSource = new MatTableDataSource( this.modelo2.cards);
+     console.log( this.modelo2.cards);
+   });
+
   }
 
-  onAplicacaoClick(event: any){
-    let codigo = parseInt(event);
-    this.buscarFipe.listarModelo(codigo).subscribe( (dados) =>
-    { this.modelo2 = dados;
-      this.dataSourceModelo = new MatTableDataSource(this.modelo2.modelos);
-    });
-  }
 }
