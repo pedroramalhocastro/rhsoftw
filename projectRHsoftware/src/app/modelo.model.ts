@@ -1,4 +1,4 @@
 export class ModeloMarca {
-    ano: [] = [];
-    modelos: Array<any> = [];
+  imagesUrl: [] = [];
+  cards: Array<any> = [];
 }
